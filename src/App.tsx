@@ -4,7 +4,7 @@ import './App.css'
 function App() {
     const[usernameInput, setUsernameInput] = useState<string>("");
     const[passwordInput, setPasswordInput] = useState<string>("");
-    let data = {usernameInput, passwordInput};
+    const data = {usernameInput, passwordInput};
 
     useEffect(() => {
         const API_URL = 'http://localhost:3000';
