@@ -1,97 +1,48 @@
-import {useEffect, useState} from 'react'
-import './App.css'
+import { useState } from 'react';
+import { useGet, usePost, usePut, useDelete } from './hooks';
+import './App.css';
 
 function App() {
-    const[usernameInput, setUsernameInput] = useState<string>("");
-    const[passwordInput, setPasswordInput] = useState<string>("");
-    const data = {usernameInput, passwordInput};
+    const [email, setEmail] = useState('');
+    const [pass, setPass] = useState('');
+    const [newEmail, setNewEmail] = useState('');
+    const [newPass, setNewPass] = useState('');
+    const [userId] = useState(0);
+    const [postToggle, setPostToggle] = useState(false);
+    const [putToggle, setPutToggle] = useState(false);
+    const [deleteToggle, setDeleteToggle] = useState(false);
+    const [deleteId, setDeleteId] = useState<number>(-1);
 
-    useEffect(() => {
-        const API_URL = 'http://localhost:3000';
+    usePost(email, pass, postToggle, () => setPostToggle(false));
+    usePut(newEmail, newPass, userId, putToggle, () => setPutToggle(false));
+    useDelete(deleteId, deleteToggle, () => setDeleteToggle(false));
 
-        fetch(API_URL)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch data. ${response.status}`);
-                }
-                return response.json();
-            })
-            .catch((error) => {console.log(error)})
-    }, []);
-
-    useEffect(() => {
-        const API_URL = 'http://localhost:3000';
-        fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        }) .then((res) => {
-            if (!res.ok) {
-                throw new Error(`Failed to fetch data. ${res.status}`);
-            }
-        })
-    },[data])
-
-    useEffect(() => {
-        const API_URL = 'http://localhost:3000';
-        fetch(API_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        }) .then((res) => {
-            if (!res.ok){
-                throw new Error(`Failed to fetch data. ${res.status}`);
-            }
-        })
-    },[data])
-
-    useEffect(() => {
-        const API_URL = 'http://localhost:3000';
-        fetch(API_URL, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        }) .then((res) => {
-            if (!res.ok){
-                throw new Error(`Failed to fetch data. ${res.status}`);
-            }
-        })
-    },[data])
+    const tempID = useGet(0);
 
     return (
         <>
-            <input onChange={(e) => {setUsernameInput(e.target.value)}}
-                   type="text"
-                   placeholder="Name"
-            />
-            <button onClick={() => {}}>
-                Edit
-            </button>
-            <button>
-                Delete
-            </button>
-            <input onChange={(e) => {setPasswordInput(e.target.value)}}
-                   type="text"
-                   placeholder="Password"
-            />
-            <button>
-                Edit
-            </button>
-            <button>
-                Delete
-            </button>
-            <button>
-                Add
-            </button>
+            <h1>Test GET</h1>
+            <p>{tempID?.email}</p>
 
+            <div>
+                <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+                <input value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
+                <button onClick={() => setPostToggle(true)}>Create Account</button>
+            </div>
+
+            <div>
+                <input value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="New Email" />
+                <input value={newPass} onChange={e => setNewPass(e.target.value)} placeholder="New Password" />
+                <button onClick={() => setPutToggle(true)}>Update Account</button>
+            </div>
+
+            <div>
+                <button onClick={() => { setDeleteId(0); setDeleteToggle(true); }}>
+                    Delete Account
+                </button>
+            </div>
         </>
-    )
+    );
 }
 
-export default App
+export default App;
